@@ -109,21 +109,23 @@ VAE.fit(trainx, trainx, epochs = epochs, batch_size = batch_size, validation_spl
 
 print('fitted')
 
-# Plot results
-data = (testx, testy)
-#viz_latent_space(encoder, data)
-#viz_decoded(encoder, decoder, data)
-encoder.save('VAE_fashionmnist_encoder.h5')
-decoder.save('VAE_fashionmnist_decoder.h5')
-VAE.save('VAE_fashionmnist.h5')
 
-b = encoder.predict([[data[0][0]]])
-a = decoder.predict([[[.21,.34],[0,0]]])
+def encodeDecode():#compares a random datapoint before and after compression
+  data = (testx, testy)
+  leng = testx.shape[0]
 
-plt.imshow(a[1], cmap='gray_r')
-plt.show()
+  select = np.random.randint(leng)
+  before = testx[select]
+  after = VAE.predict([[before]])
 
+  fig, axs = plt.subplots(2)
+  axs[0].imshow(before, cmap='gray_r')
+  axs[1].imshow(after[0], cmap='gray_r')
+  plt.show()
 
-#latents = encoder.predict(trainx[:10])
+def generate(points):#generates an image from given latent vector
+  data = (testx, testy)
+  a = decoder.predict([[points,[0,0]]])
 
-#print(latents)
+  plt.imshow(a[0], cmap='gray_r')
+  plt.show()
